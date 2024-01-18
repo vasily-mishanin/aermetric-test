@@ -1,9 +1,15 @@
 import './App.css';
+import Users from './pages/Users';
+import { usersStore } from './store/usersStore';
+
+setTimeout(() => {
+  usersStore.addUser({ name: 'Bob' });
+}, 3000);
 
 function App() {
   return (
     <>
-      <h1 className='text-red-400'>Super Users</h1>
+      <Users store={usersStore} />
     </>
   );
 }
