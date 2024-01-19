@@ -37,3 +37,5 @@ TypeScript и MobX. Приложение должно отображать сп�
 пользователя
 
 # Yarn + React + TypeScript + Vite
+
+- Mock API - https://dummyjson.com/
