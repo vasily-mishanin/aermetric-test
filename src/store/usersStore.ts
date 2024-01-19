@@ -1,7 +1,7 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { fetchUsers } from '../services/usersService';
+import { fetchUsers } from '../services/users_service';
 import { QueryParams, User } from '../types';
-import { DEFAULT_LIMIT } from '../services/constants';
+import { DEFAULT_LIMIT, LIMIT_10 } from '../services/constants';
 
 export class UsersStore {
   public users: User[];
@@ -12,36 +12,40 @@ export class UsersStore {
     makeObservable(this, {
       users: observable,
       numberOfRequests: observable,
-      addUser: action,
+      addUsers: action,
+      setUsers: action,
       loadUsers: action,
     });
-    runInAction(() => this.loadUsers({ limit: DEFAULT_LIMIT }));
+    runInAction(() => this.loadUsers({ limit: LIMIT_10 }, true));
   }
 
-  addUser = (user: User) => {
-    this.users.push(user);
+  addUsers = (users: User[]) => {
+    this.users.push(...users);
   };
 
-  loadUsers = async (options: QueryParams) => {
+  setUsers = (users: User[]) => {
+    this.users = users;
+  };
+
+  loadUsers = async (options: QueryParams, isResetUsers: boolean = false) => {
+    console.log('loadUsers');
     try {
       this.numberOfRequests++;
       const response = await fetchUsers(options);
       if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        const processedUsers: User[] = data.users.map((user: User) => ({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.image,
-          image: user.image,
-          company: {
-            city: user.company.city,
-            name: user.company.name,
-            title: user.company.title,
-          },
-        }));
+        const data: { users: User[] } = await response.json();
+        if (!('users' in data)) {
+          throw Error('Unexpected data structure');
+        }
+        const processedUsers = this.processUsers(data.users);
         console.log(processedUsers);
-        this.users = processedUsers;
+        if (isResetUsers) {
+          this.setUsers(processedUsers);
+        } else {
+          this.addUsers(processedUsers);
+        }
+        this.numberOfRequests--;
+        return processedUsers;
       } else {
         if (response.status === 404) {
           console.warn('Users not found.');
@@ -57,6 +61,23 @@ export class UsersStore {
       console.log('Error - ', error);
     }
   };
+
+  processUsers(users: User[]) {
+    return users.map((user: User) => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      image: user.image,
+      company: {
+        address: {
+          city: user.company.address.city,
+        },
+        name: user.company.name,
+        title: user.company.title,
+      },
+    }));
+  }
 }
 
 export const usersStore = new UsersStore();

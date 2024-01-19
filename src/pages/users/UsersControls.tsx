@@ -1,9 +1,20 @@
-import { LIMIT_10, LIMIT_20, LIMIT_40 } from '../../services/constants';
+import {
+  LIMIT_10,
+  LIMIT_20,
+  LIMIT_40,
+  DEFAULT_LIMIT,
+} from '../../services/constants';
 
 const UsersControls = ({ onShow }: { onShow: (n: number) => void }) => {
   return (
-    <div className='px-8 pb-2 flex gap-2 justify-end'>
+    <div className='px-8 pb-2 flex gap-2 justify-end self-end'>
       Show:
+      <button
+        className='w-7 text-center bg-blue-200'
+        onClick={() => onShow(DEFAULT_LIMIT)}
+      >
+        {DEFAULT_LIMIT}
+      </button>
       <button
         className='w-7 text-center bg-blue-200'
         onClick={() => onShow(LIMIT_10)}

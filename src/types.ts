@@ -1,5 +1,6 @@
 export type QueryParams = {
   limit?: string | number;
+  skip?: string | number;
 };
 
 export type User = {
@@ -7,6 +8,6 @@ export type User = {
   firstName: string;
   lastName: string;
   email: string;
-  company: { city: string; name: string; title: string };
+  company: { address: { city: string }; name: string; title: string };
   image: string;
 };

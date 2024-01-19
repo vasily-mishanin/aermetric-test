@@ -2,10 +2,10 @@ import { User } from '../../types';
 
 const UsersList = ({ users }: { users: User[] }) => {
   return (
-    <ul className='px-8 py-4 flex flex-col  gap-4'>
+    <ul className='px-8 py-4 mb-8 flex gap-y-4 gap-x-8 justify-start flex-wrap'>
       {users.map((user, index) => (
         <li key={user.id}>
-          <div className='grid grid-cols-[80px,1fr] gap-4 items-center'>
+          <div className='grid grid-cols-[80px,160px] gap-4 items-center'>
             <div className='w-20'>
               <img className='w-full h-auto' src={user.image} />
             </div>
