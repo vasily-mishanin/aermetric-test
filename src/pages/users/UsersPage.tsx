@@ -47,6 +47,10 @@ const UsersPage = observer(({ store }: UsersProps) => {
     setPagesLoaded(nextPage);
   };
 
+  const handleSearch = (query: string) => {
+    console.log('Search for: ', query);
+  };
+
   return (
     <section
       className={`flex flex-col items-center mb-8 ${
@@ -54,7 +58,7 @@ const UsersPage = observer(({ store }: UsersProps) => {
       }`}
     >
       <h1 className='pb-2 text-center text-green-400'>Our Cute Users</h1>
-      <UsersControls onShow={handleShowUsers} />
+      <UsersControls onShow={handleShowUsers} onSearch={handleSearch} />
       <UsersList users={store.users.slice()} />
       {noMoreUsers && <p className='text-orange-400'>No more users</p>}
 
