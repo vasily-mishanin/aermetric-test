@@ -2,8 +2,8 @@ import { User } from '../../types';
 
 const UsersList = ({ users }: { users: User[] }) => {
   return (
-    <ul className='px-8 py-4 mb-8 flex gap-y-4 gap-x-8 justify-start flex-wrap'>
-      {users.map((user, index) => (
+    <ul className='px-8 py-4 mb-8 flex gap-y-4 gap-x-8 justify-center flex-wrap'>
+      {users.map((user) => (
         <li key={user.id}>
           <div className='grid grid-cols-[80px,160px] gap-4 items-center'>
             <div className='w-20'>
@@ -17,5 +17,4 @@ const UsersList = ({ users }: { users: User[] }) => {
   );
 };
 export default UsersList;
-
-//pl-[calc(50%-80px)]
+//min-h-[750px]

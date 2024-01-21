@@ -1,50 +1,68 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { fetchUsers } from '../services/users_service';
-import { QueryParams, User } from '../types';
+import { LOAD_TYPE, QueryParams, User } from '../types';
 import { DEFAULT_LIMIT, LIMIT_10 } from '../services/constants';
 
 export class UsersStore {
   public users: User[];
+  public totalResults: number;
   public numberOfRequests: number;
-  constructor(users = [], numberOfRequests = 0) {
+  constructor(users = [], totalResults = 0, numberOfRequests = 0) {
     this.users = users;
+    this.totalResults = totalResults;
     this.numberOfRequests = numberOfRequests;
     makeObservable(this, {
       users: observable,
+      totalResults: observable,
       numberOfRequests: observable,
       addUsers: action,
       setUsers: action,
       loadUsers: action,
     });
-    runInAction(() => this.loadUsers({ limit: LIMIT_10 }, true));
+    //runInAction(() => this.loadUsers({ limit: LIMIT_10 }, LOAD_TYPE.RESET));
   }
 
   addUsers = (users: User[]) => {
-    this.users.push(...users);
+    const filteredUsers = users.filter((loadedUser) => {
+      if (!this.users.some((user) => user.id === loadedUser.id)) {
+        return loadedUser;
+      }
+    });
+    this.users.push(...filteredUsers);
   };
 
   setUsers = (users: User[]) => {
     this.users = users;
   };
 
-  loadUsers = async (options: QueryParams, isResetUsers: boolean = false) => {
+  loadUsers = async (
+    queryParams: QueryParams,
+    loadType: LOAD_TYPE = LOAD_TYPE.ADD,
+    path?: string
+  ) => {
     console.log('loadUsers');
     try {
       this.numberOfRequests++;
-      const response = await fetchUsers(options);
+      const response = await fetchUsers(path, queryParams); // in no path then path=/users
       if (response.ok) {
-        const data: { users: User[] } = await response.json();
+        const data: { users: User[]; total: number } = await response.json();
         if (!('users' in data)) {
           throw Error('Unexpected data structure');
         }
         const processedUsers = this.processUsers(data.users);
         console.log(processedUsers);
-        if (isResetUsers) {
-          this.setUsers(processedUsers);
-        } else {
-          this.addUsers(processedUsers);
+        if (loadType === LOAD_TYPE.RESET) {
+          runInAction(() => {
+            this.setUsers(processedUsers);
+            this.totalResults = data.total;
+          });
+        } else if (loadType === LOAD_TYPE.ADD) {
+          runInAction(() => {
+            this.addUsers(processedUsers);
+            this.totalResults = data.total;
+          });
         }
-        this.numberOfRequests--;
+        runInAction(() => this.numberOfRequests--);
         return processedUsers;
       } else {
         if (response.status === 404) {

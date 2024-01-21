@@ -1,6 +1,7 @@
 export type QueryParams = {
   limit?: string | number;
   skip?: string | number;
+  q?: string | number;
 };
 
 export type User = {
@@ -11,3 +12,8 @@ export type User = {
   company: { address: { city: string }; name: string; title: string };
   image: string;
 };
+
+export enum LOAD_TYPE {
+  ADD,
+  RESET,
+}

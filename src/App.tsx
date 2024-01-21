@@ -14,7 +14,12 @@ function App() {
     <>
       <Routes>
         <Route path='/' element={<RootLayout />}>
+          <Route
+            path='/users/search'
+            element={<UsersPage store={usersStore} />}
+          ></Route>
           <Route path='/users' element={<UsersPage store={usersStore} />} />
+          <Route path='/users/:id' element={<h1>One User Page</h1>}></Route>
           <Route path='*' element={<NoMatch />} />
         </Route>
       </Routes>

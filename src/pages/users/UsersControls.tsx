@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   LIMIT_10,
   LIMIT_20,
@@ -6,12 +6,11 @@ import {
   DEFAULT_LIMIT,
 } from '../../services/constants';
 import { debounce } from '../../utils/debounce';
+import { useSearchParams } from 'react-router-dom';
 
 const DEBOUNCE_TIME = 3000;
 
 const limits = [DEFAULT_LIMIT, LIMIT_10, LIMIT_20, LIMIT_40];
-
-//TODO - add debounce on Search
 
 type UsersControlsProps = {
   onShow: (n: number) => void;
@@ -19,7 +18,14 @@ type UsersControlsProps = {
 };
 
 const UsersControls = ({ onShow, onSearch }: UsersControlsProps) => {
-  const [query, setQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') ?? '');
+
+  const activeLimit = searchParams.get('limit');
+
+  useEffect(() => {
+    setQuery(searchParams.get('q') || '');
+  }, [searchParams]);
 
   const debouncedSearch = useMemo(
     () => debounce(onSearch, DEBOUNCE_TIME),
@@ -29,9 +35,7 @@ const UsersControls = ({ onShow, onSearch }: UsersControlsProps) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setQuery(query);
-    if (query) {
-      debouncedSearch(e.target.value);
-    }
+    debouncedSearch(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -45,7 +49,12 @@ const UsersControls = ({ onShow, onSearch }: UsersControlsProps) => {
         <span>Show:</span>
         {limits.map((limit) => (
           <button
-            className='w-6 h-6 text-center bg-sky-900 sm:rounded-md transition-colors hover:cursor-pointer hover:bg-sky-600'
+            key={limit}
+            className={`w-6 h-6 text-center text-slate-100 rounded-sm transition-colors hover:cursor-pointer hover:bg-sky-600 ${
+              limit === (activeLimit && +activeLimit)
+                ? 'bg-sky-600'
+                : 'bg-sky-900'
+            }`}
             onClick={() => onShow(limit)}
           >
             {limit}
@@ -56,12 +65,15 @@ const UsersControls = ({ onShow, onSearch }: UsersControlsProps) => {
       <form onSubmit={handleSubmit}>
         <input
           type='search'
+          placeholder='Search'
+          name='searchUsers'
           value={query}
           onChange={onChange}
-          className='py-1 px-2 w-40 xsm:w-48 sm:w-64'
+          className='py-1 px-2 w-40 border rounded border-slate-400 outline-none xsm:w-48 sm:w-64 transition-colors focus:border-slate-500 hover:shadow-sm hover:shadow-sky-200'
         />
       </form>
     </div>
   );
 };
+
 export default UsersControls;
