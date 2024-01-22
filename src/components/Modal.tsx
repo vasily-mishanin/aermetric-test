@@ -24,7 +24,7 @@ export function Modal({ children }: PropsWithChildren) {
       onClick={() => navigate(-1)}
     >
       <div
-        className='relative bg-slate-300 w-80 z-10 p-4 rounded-lg lg:p-8 lg:w-[600px] animate-pulse'
+        className='relative bg-slate-300 w-80 z-10 p-4 rounded-lg lg:p-8 lg:w-[600px]'
         onClick={(e) => e.stopPropagation()}
       >
         <button
