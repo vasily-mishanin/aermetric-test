@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { UsersStore } from '../store/usersStore';
+import { UsersStore } from '../../store/usersStore';
 import { useParams } from 'react-router-dom';
 
 const UserInfo = observer(({ store }: { store: UsersStore }) => {
@@ -19,7 +19,7 @@ const UserInfo = observer(({ store }: { store: UsersStore }) => {
         <h3 className='text-2xl font-bold lg:text-3xl'>
           {firstName} {lastName}
         </h3>
-        <div className='italic hover:cursor-pointer hover:text-sky-600 lg:text-2xl'>
+        <div className='italic hover:cursor-pointer hover:text-indigo-600 lg:text-2xl'>
           <a href={`mailto:${email}`}>{email}</a>
         </div>
 

@@ -46,7 +46,7 @@ const UsersControls = ({ onShow, onSearch }: UsersControlsProps) => {
   return (
     <div className='w-full px-4 pb-2 self-end flex gap-4 justify-between'>
       <div className='flex gap-1 text-sm items-center'>
-        <span>Show:</span>
+        <span>Batch:</span>
         {limits.map((limit) => (
           <button
             key={limit}
