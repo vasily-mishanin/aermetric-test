@@ -2,9 +2,10 @@ import './App.css';
 import { Modal } from './components/Modal';
 import UserInfo from './components/UserInfo';
 import RootLayout from './pages/RootLayout';
+import { NoMatch } from './pages/not-found/NoMatch';
 import UsersPage from './pages/users/UsersPage';
 import { usersStore } from './store/usersStore';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 function App() {
   const location = useLocation();
@@ -39,14 +40,3 @@ function App() {
 }
 
 export default App;
-
-function NoMatch() {
-  return (
-    <div>
-      <h2>Nothing to see here!</h2>
-      <p>
-        <Link to='/'>Go to the home page</Link>
-      </p>
-    </div>
-  );
-}
