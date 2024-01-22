@@ -5,7 +5,7 @@ import RootLayout from './pages/RootLayout';
 import { NoMatch } from './pages/not-found/NoMatch';
 import UsersPage from './pages/users/UsersPage';
 import { usersStore } from './store/usersStore';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 function App() {
   const location = useLocation();
