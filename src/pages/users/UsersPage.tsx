@@ -46,9 +46,6 @@ const UsersPage = observer(({ store }: UsersProps) => {
 
   const initialLoad = async () => {
     await store.loadUsers(queryParams, LOAD_TYPE.RESET, path);
-    // if (store.totalResults - store.users.length > 0) {
-    //   toggleStep((prev) => !prev);
-    // }
   };
 
   const loadMoreUsers = async () => {
@@ -108,9 +105,9 @@ const UsersPage = observer(({ store }: UsersProps) => {
       <UsersControls onShow={handleSetBatch} onSearch={handleSearch} />
       {store.users.length > 0 && <UsersList users={store.users.slice()} />}
 
-      {/* {store.users.length < 1 && pagesLoaded && (
+      {store.users.length < 1 && !leftResults && (
         <p className='text-orange-400'>No such users</p>
-      )} */}
+      )}
 
       {!leftResults && store.users.length > 0 && (
         <p className='text-orange-400'>That is all users</p>

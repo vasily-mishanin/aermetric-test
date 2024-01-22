@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { User } from '../../types';
+import UserListItem from './UserListItem';
 
 const UsersList = ({ users }: { users: User[] }) => {
   const location = useLocation();
@@ -8,12 +9,7 @@ const UsersList = ({ users }: { users: User[] }) => {
       {users.map((user) => (
         <li key={user.id}>
           <Link to={`/users/${user.id}`} state={{ previousLocation: location }}>
-            <div className='grid grid-cols-[80px,160px] gap-4 items-center lg:grid-cols-[128px,160px]'>
-              <div className='w-20 lg:w-32'>
-                <img className='w-full h-auto' src={user.image} />
-              </div>
-              <p className='text-2xl font-bold'>{user.firstName}</p>
-            </div>
+            <UserListItem user={user} />
           </Link>
         </li>
       ))}
@@ -21,4 +17,3 @@ const UsersList = ({ users }: { users: User[] }) => {
   );
 };
 export default UsersList;
-//min-h-[750px]
