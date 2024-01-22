@@ -1,6 +1,6 @@
 import './App.css';
 import { Modal } from './components/Modal';
-import UserInfo from './components/UserInfo';
+import UserInfo from './pages/users/UserInfo';
 import RootLayout from './pages/RootLayout';
 import { NoMatch } from './pages/not-found/NoMatch';
 import UsersPage from './pages/users/UsersPage';

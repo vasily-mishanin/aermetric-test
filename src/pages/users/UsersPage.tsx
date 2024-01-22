@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { UsersStore } from '../../store/usersStore';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import UsersList from './UsersList';
 import UsersControls from './UsersControls';
 import { useInView } from 'react-intersection-observer';
@@ -15,23 +15,20 @@ interface UsersProps {
 }
 
 const UsersPage = observer(({ store }: UsersProps) => {
-  const { ref, inView } = useInView({ threshold: 1, initialInView: false });
+  const { ref, inView } = useInView({ threshold: 0.3, initialInView: false });
+
   const [pagesLoaded, setPagesLoaded] = useState(0);
+  const [step, toggleStep] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
   const isFirstRender = useRef(true);
 
-  const leftResults = useMemo(
-    () => store.totalResults - store.users.length,
-    [store.totalResults, store.users.length]
-  );
-  const path = useMemo(() => location.pathname, [location.pathname]);
-  const searchString = useMemo(() => location.search, [location.search]);
-  const queryParams = useMemo(
-    () => constructQueryParamsObject(searchString),
-    [searchString]
-  );
+  const leftResults = store.totalResults - store.users.length;
+  const path = location.pathname;
+  const searchString = location.search;
+  const queryParams = constructQueryParamsObject(searchString);
 
   useEffect(() => {
     // initial load - Restore state from URL
@@ -45,12 +42,10 @@ const UsersPage = observer(({ store }: UsersProps) => {
     if (inView && !isFirstRender.current) {
       loadMoreUsers();
     }
-  }, [inView]);
-  // && !store.numberOfRequests
-  // path, queryParams, leftResults, store.numberOfRequests
+  }, [inView, step]);
 
   const initialLoad = async () => {
-    store.loadUsers(queryParams, LOAD_TYPE.RESET, path);
+    await store.loadUsers(queryParams, LOAD_TYPE.RESET, path);
   };
 
   const loadMoreUsers = async () => {
@@ -63,11 +58,16 @@ const UsersPage = observer(({ store }: UsersProps) => {
         return prev;
       });
     }
-    queryParams.skip = searchParams.get('skip') ?? queryParams.skip;
+    queryParams.skip = (searchParams.get('skip') ?? queryParams.skip) || '0';
+
     await store.loadUsers(queryParams, LOAD_TYPE.ADD, path);
+
+    if (inView && leftResults > 0) {
+      toggleStep((prev) => !prev);
+    }
   };
 
-  const handleShowUsers = async (limit: number) => {
+  const handleSetBatch = async (limit: number) => {
     setSearchParams((prev) => {
       [...prev.entries()].forEach(([key, value]) => {
         if (!value) {
@@ -75,14 +75,12 @@ const UsersPage = observer(({ store }: UsersProps) => {
         }
       });
       prev.set('limit', limit.toString());
+      prev.set('skip', '');
       return prev;
     });
     queryParams.limit = limit;
+    queryParams.skip = '';
     await store.loadUsers(queryParams, LOAD_TYPE.RESET, path);
-
-    if (searchParams.size === 1 && searchParams.get('limit')) {
-      navigate(`/users?limit=${limit}`);
-    }
   };
 
   const handleSearch = (query: string) => {
@@ -100,16 +98,16 @@ const UsersPage = observer(({ store }: UsersProps) => {
   return (
     <section
       className={`flex flex-col items-center mb-8 ${
-        store.numberOfRequests ? 'opacity-75' : ''
+        store.numberOfRequests > 0 ? 'opacity-75' : ''
       }`}
     >
       <h1 className='mb-4 text-center text-slate-400'>Our Cute Users</h1>
-      <UsersControls onShow={handleShowUsers} onSearch={handleSearch} />
+      <UsersControls onShow={handleSetBatch} onSearch={handleSearch} />
       {store.users.length > 0 && <UsersList users={store.users.slice()} />}
 
-      {/* {store.users.length < 1 && pagesLoaded && (
+      {store.users.length < 1 && !leftResults && (
         <p className='text-orange-400'>No such users</p>
-      )} */}
+      )}
 
       {!leftResults && store.users.length > 0 && (
         <p className='text-orange-400'>That is all users</p>

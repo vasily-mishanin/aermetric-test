@@ -73,7 +73,7 @@ export class UsersStore {
 
       this.numberOfRequests--;
     } catch (error) {
-      console.log('Error - ', error);
+      console.warn('Error - ', error);
     }
   };
 
