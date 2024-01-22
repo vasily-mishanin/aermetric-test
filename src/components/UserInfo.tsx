@@ -13,7 +13,7 @@ const UserInfo = observer(({ store }: { store: UsersStore }) => {
   if (foundUser) {
     const { firstName, lastName, email, image, company } = foundUser;
     return (
-      <article className='flex flex-col gap-2'>
+      <article className='flex flex-col gap-2 text-sky-600'>
         <div className='w-1/2 self-center'>
           <img className='w-full h-auto' src={image} />
         </div>

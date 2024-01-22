@@ -20,7 +20,7 @@ const RootLayout = () => {
       <main className='flex-grow flex-shrink-0 basis-auto'>
         <Outlet />
       </main>
-      <footer className='flex-shrink-0 bg-sky-700 flex items-center justify-center'>
+      <footer className='flex-shrink-0 bg-sky-400 flex items-center justify-center'>
         FOOTER
       </footer>
     </div>

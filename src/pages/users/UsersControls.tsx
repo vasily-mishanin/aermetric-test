@@ -8,7 +8,7 @@ import {
 import { debounce } from '../../utils/debounce';
 import { useSearchParams } from 'react-router-dom';
 
-const DEBOUNCE_TIME = 3000;
+const DEBOUNCE_TIME = 2000;
 
 const limits = [DEFAULT_LIMIT, LIMIT_10, LIMIT_20, LIMIT_40];
 
