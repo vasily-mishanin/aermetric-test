@@ -17,6 +17,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
 a:link {
 }
 a:hover {
@@ -29,7 +40,7 @@ a:visited {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #3d3b40;
     background-color: #ffffff;
   }
 
