@@ -1,7 +1,6 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { fetchUsers } from '../services/users_service';
 import { LOAD_TYPE, QueryParams, User } from '../types';
-import { DEFAULT_LIMIT, LIMIT_10 } from '../services/constants';
 
 export class UsersStore {
   public users: User[];
@@ -40,7 +39,6 @@ export class UsersStore {
     loadType: LOAD_TYPE = LOAD_TYPE.ADD,
     path?: string
   ) => {
-    console.log('loadUsers');
     try {
       this.numberOfRequests++;
       const response = await fetchUsers(path, queryParams); // in no path then path=/users
@@ -50,7 +48,6 @@ export class UsersStore {
           throw Error('Unexpected data structure');
         }
         const processedUsers = this.processUsers(data.users);
-        console.log(processedUsers);
         if (loadType === LOAD_TYPE.RESET) {
           runInAction(() => {
             this.setUsers(processedUsers);

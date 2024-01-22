@@ -6,13 +6,8 @@ import UsersControls from './UsersControls';
 import { useInView } from 'react-intersection-observer';
 import { delay } from '../../utils/delay';
 import Spinner from '../../components/Spinner';
-import { LOAD_TYPE, QueryParams } from '../../types';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { LOAD_TYPE } from '../../types';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { constructQueryParamsObject } from '../../services/utils';
 
 interface UsersProps {
@@ -22,7 +17,6 @@ interface UsersProps {
 const UsersPage = observer(({ store }: UsersProps) => {
   const { ref, inView } = useInView({ threshold: 1, initialInView: false });
   const [pagesLoaded, setPagesLoaded] = useState(0);
-  const [usersLeft, setUsersLeft] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
@@ -38,15 +32,10 @@ const UsersPage = observer(({ store }: UsersProps) => {
     () => constructQueryParamsObject(searchString),
     [searchString]
   );
-  const skip = searchParams.get('skip');
 
   useEffect(() => {
-    console.log('--EFFECT--', { inView });
-    console.log(path, searchString, leftResults, queryParams);
-
     // initial load - Restore state from URL
     if (isFirstRender.current) {
-      console.log('INITIAL', path, searchString);
       isFirstRender.current = false;
       initialLoad();
       setPagesLoaded((p) => p + 1);
@@ -54,7 +43,6 @@ const UsersPage = observer(({ store }: UsersProps) => {
 
     // download MORE users on scroll
     if (inView && !isFirstRender.current) {
-      console.log('SCROLL');
       loadMoreUsers();
     }
   }, [inView]);
@@ -80,7 +68,6 @@ const UsersPage = observer(({ store }: UsersProps) => {
   };
 
   const handleShowUsers = async (limit: number) => {
-    console.log('CHANGE LIMIT');
     setSearchParams((prev) => {
       [...prev.entries()].forEach(([key, value]) => {
         if (!value) {
@@ -99,22 +86,17 @@ const UsersPage = observer(({ store }: UsersProps) => {
   };
 
   const handleSearch = (query: string) => {
-    console.log('SEARCH:', query);
     const { q, ...restQuery } = queryParams;
-    console.log('HERE', query);
     if (!query) {
-      console.log('TO USERS');
       store.loadUsers(restQuery, LOAD_TYPE.RESET, '/users');
       setSearchParams('');
       navigate('/users');
       return;
     }
-    console.log(query);
     store.loadUsers({ q: query }, LOAD_TYPE.RESET, '/users/search');
     navigate(`/users/search?q=${query}`);
   };
 
-  // console.log('UsersPage', store.users.slice());
   return (
     <section
       className={`flex flex-col items-center mb-8 ${
@@ -133,7 +115,6 @@ const UsersPage = observer(({ store }: UsersProps) => {
         <p className='text-orange-400'>That is all users</p>
       )}
 
-      {/* {!noMoreUsers && store.users.slice().length > 0 && ( */}
       {leftResults > 0 && pagesLoaded > 0 && (
         <div ref={ref}>
           <Spinner />

@@ -14,7 +14,7 @@ const RootLayout = () => {
 
   return (
     <div className='flex flex-col gap-4 h-full'>
-      <header className='h-10 p-4 flex-shrink-0 bg-slate-500 flex items-center'>
+      <header className='h-10 p-4 flex-shrink-0 bg-slate-400 flex items-center font-bold'>
         <Link to='/users'> Users</Link>
       </header>
       <main className='flex-grow flex-shrink-0 basis-auto'>

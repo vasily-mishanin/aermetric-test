@@ -21,7 +21,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }],
-  // Settings for MobX
-  "useDefineForClassFields": true
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

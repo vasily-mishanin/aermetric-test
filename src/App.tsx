@@ -1,5 +1,6 @@
 import './App.css';
 import { Modal } from './components/Modal';
+import UserInfo from './components/UserInfo';
 import RootLayout from './pages/RootLayout';
 import UsersPage from './pages/users/UsersPage';
 import { usersStore } from './store/usersStore';
@@ -8,7 +9,6 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 function App() {
   const location = useLocation();
   const previousLocation = location.state?.previousLocation;
-  console.log({ location });
   return (
     <>
       <Routes location={previousLocation || location}>
@@ -24,7 +24,14 @@ function App() {
       </Routes>
       {previousLocation && (
         <Routes>
-          <Route path='/users/:id' element={<Modal>MODAL</Modal>} />
+          <Route
+            path='/users/:id'
+            element={
+              <Modal>
+                <UserInfo store={usersStore} />
+              </Modal>
+            }
+          />
         </Routes>
       )}
     </>

@@ -5,7 +5,7 @@ export type QueryParams = {
 };
 
 export type User = {
-  id: string;
+  id: string | number;
   firstName: string;
   lastName: string;
   email: string;
