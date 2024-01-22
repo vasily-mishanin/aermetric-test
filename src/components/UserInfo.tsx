@@ -3,7 +3,6 @@ import { UsersStore } from '../store/usersStore';
 import { useParams } from 'react-router-dom';
 
 const UserInfo = observer(({ store }: { store: UsersStore }) => {
-  // const [user, setUser] = useState<User>();
   const params = useParams();
 
   const foundUser = store.users

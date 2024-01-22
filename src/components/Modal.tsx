@@ -22,7 +22,7 @@ export function Modal({ children }: PropsWithChildren) {
     setClosing(true);
 
     setTimeout(() => {
-      //setClosing(false);
+      setClosing(false);
       navigate(-1);
     }, 300);
   };
